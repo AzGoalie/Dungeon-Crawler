@@ -31,28 +31,21 @@ void StateManager::Shutdown()
 
 void StateManager::HandleEvents(SDL_Event &e)
 {
-	//Go through states and handle their events if not paused
-	int size = m_States.size();	// If a states adds or pops a state, you dont want to update it right away
-	for (int i = 0; i < size; i++)
-	{
-		if (!m_States[i]->IsPaused())
-			m_States[i]->HandleEvents(e);
-	}
+	// Only handle the current state's input
+	if (!m_States.empty())
+		m_States.back()->HandleEvents(e);
 }
 
 void StateManager::Update(double dt)
 {
-	//Go through states and update non-paused (or all?)
-	for (int i = 0; i < m_States.size(); i++)
-	{
-		if (!m_States[i]->IsPaused())
-			m_States[i]->Update(dt);
-	}
+	// Only update the current state
+	if (!m_States.empty())
+		m_States.back()->Update(dt);
 }
 
 void StateManager::Render(double alpha)
 {
-	//Go through states and render non-paused
+	//Go through states and render non-paused (overlays)
 	for (int i = 0; i < m_States.size(); i++)
 	{
 		if (!m_States[i]->IsPaused())
