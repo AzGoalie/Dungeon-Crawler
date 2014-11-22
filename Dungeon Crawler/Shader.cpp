@@ -4,7 +4,18 @@
 #include <fstream>
 #include <sstream>
 #include <sys/stat.h>
-using namespace std;
+using std::cout;
+using std::endl;
+using std::string;
+using std::stringstream;
+using std::ifstream;
+
+using glm::vec2;
+using glm::vec3;
+using glm::vec4;
+using glm::mat4;
+using glm::mat3;
+
 
 namespace ShaderInfo {
 	struct shader_file_extension {
@@ -212,14 +223,15 @@ bool ShaderProgram::Validate()
 	glValidateProgram(m_Handle);
 	glGetProgramiv(m_Handle, GL_VALIDATE_STATUS, &status);
 
-	if (GL_FALSE == status) {
-		// Store log and return false
+	if (GL_FALSE == status) 
+	{
 		int length = 0;
 		string logString;
 
 		glGetProgramiv(m_Handle, GL_INFO_LOG_LENGTH, &length);
 
-		if (length > 0) {
+		if (length > 0) 
+		{
 			char * c_log = new char[length];
 			int written = 0;
 			glGetProgramInfoLog(m_Handle, length, &written, c_log);
@@ -231,4 +243,159 @@ bool ShaderProgram::Validate()
 		return false;
 	}
 	return true;
+}
+
+void ShaderProgram::SetUniform(const char *name, float x, float y, float z)
+{
+	GLint loc = GetUniformLocation(name);
+	glUniform3f(loc, x, y, z);
+}
+
+void ShaderProgram::SetUniform(const char *name, const vec3 & v)
+{
+	this->SetUniform(name, v.x, v.y, v.z);
+}
+
+void ShaderProgram::SetUniform(const char *name, const vec4 & v)
+{
+	GLint loc = GetUniformLocation(name);
+	glUniform4f(loc, v.x, v.y, v.z, v.w);
+}
+
+void ShaderProgram::SetUniform(const char *name, const vec2 & v)
+{
+	GLint loc = GetUniformLocation(name);
+	glUniform2f(loc, v.x, v.y);
+}
+
+void ShaderProgram::SetUniform(const char *name, const mat4 & m)
+{
+	GLint loc = GetUniformLocation(name);
+	glUniformMatrix4fv(loc, 1, GL_FALSE, &m[0][0]);
+}
+
+void ShaderProgram::SetUniform(const char *name, const mat3 & m)
+{
+	GLint loc = GetUniformLocation(name);
+	glUniformMatrix3fv(loc, 1, GL_FALSE, &m[0][0]);
+}
+
+void ShaderProgram::SetUniform(const char *name, float val)
+{
+	GLint loc = GetUniformLocation(name);
+	glUniform1f(loc, val);
+}
+
+void ShaderProgram::SetUniform(const char *name, int val)
+{
+	GLint loc = GetUniformLocation(name);
+	glUniform1i(loc, val);
+}
+
+void ShaderProgram::SetUniform(const char *name, GLuint val)
+{
+	GLint loc = GetUniformLocation(name);
+	glUniform1ui(loc, val);
+}
+
+void ShaderProgram::SetUniform(const char *name, bool val)
+{
+	int loc = GetUniformLocation(name);
+	glUniform1i(loc, val);
+}
+
+void ShaderProgram::BindAttribLocation(GLuint location, const char * name)
+{
+	glBindAttribLocation(m_Handle, location, name);
+}
+
+void ShaderProgram::BindFragDataLocation(GLuint location, const char * name)
+{
+	glBindFragDataLocation(m_Handle, location, name);
+}
+
+int ShaderProgram::GetUniformLocation(const char * name)
+{
+	std::map<string, int>::iterator pos;
+	pos = m_UniformLocations.find(name);
+
+	if (pos == m_UniformLocations.end())
+		m_UniformLocations[name] = glGetUniformLocation(m_Handle, name);
+
+	return m_UniformLocations[name];
+}
+
+
+const char * ShaderProgram::GetTypeString(GLenum type) 
+{
+	switch (type) 
+	{
+	case GL_FLOAT:
+		return "float";
+	case GL_FLOAT_VEC2:
+		return "vec2";
+	case GL_FLOAT_VEC3:
+		return "vec3";
+	case GL_FLOAT_VEC4:
+		return "vec4";
+	case GL_DOUBLE:
+		return "double";
+	case GL_INT:
+		return "int";
+	case GL_UNSIGNED_INT:
+		return "unsigned int";
+	case GL_BOOL:
+		return "bool";
+	case GL_FLOAT_MAT2:
+		return "mat2";
+	case GL_FLOAT_MAT3:
+		return "mat3";
+	case GL_FLOAT_MAT4:
+		return "mat4";
+	default:
+		return "?";
+	}
+}
+
+void ShaderProgram::PrintActiveUniforms() 
+{
+	GLint numUniforms = 0;
+	glGetProgramInterfaceiv(m_Handle, GL_UNIFORM, GL_ACTIVE_RESOURCES, &numUniforms);
+
+	GLenum properties[] = { GL_NAME_LENGTH, GL_TYPE, GL_LOCATION, GL_BLOCK_INDEX };
+
+	printf("Active uniforms:\n");
+	for (int i = 0; i < numUniforms; ++i) 
+	{
+		GLint results[4];
+		glGetProgramResourceiv(m_Handle, GL_UNIFORM, i, 4, properties, 4, NULL, results);
+
+		if (results[3] != -1) continue;  // Skip uniforms in blocks 
+		GLint nameBufSize = results[0] + 1;
+		char * name = new char[nameBufSize];
+		glGetProgramResourceName(m_Handle, GL_UNIFORM, i, nameBufSize, NULL, name);
+		printf("%-5d %s (%s)\n", results[2], name, GetTypeString(results[1]));
+		delete[] name;
+	}
+}
+
+void ShaderProgram::PrintActiveAttribs() 
+{
+	GLint numAttribs;
+	glGetProgramInterfaceiv(m_Handle, GL_PROGRAM_INPUT, GL_ACTIVE_RESOURCES, &numAttribs);
+
+	GLenum properties[] = { GL_NAME_LENGTH, GL_TYPE, GL_LOCATION };
+
+	printf("Active attributes:\n");
+	for (int i = 0; i < numAttribs; ++i) 
+	{
+		GLint results[3];
+		glGetProgramResourceiv(m_Handle, GL_PROGRAM_INPUT, i, 3, properties, 3, NULL, results);
+
+		GLint nameBufSize = results[0] + 1;
+		char * name = new char[nameBufSize];
+		glGetProgramResourceName(m_Handle, GL_PROGRAM_INPUT, i, nameBufSize, NULL, name);
+		printf("%-5d %s (%s)\n", results[2], name, GetTypeString(results[1]));
+		delete[] name;
+	}
 }
