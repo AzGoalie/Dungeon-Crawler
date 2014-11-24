@@ -7,8 +7,10 @@
 class ShaderTest : public State
 {
 private:
-	GLuint vbo;
-	GLuint vao;
+	GLuint triangleVbo;
+	GLuint squareVbo;
+	GLuint triangleVao;
+	GLuint squareVao;
 	ShaderProgram shader;
 
 public:
