@@ -2,6 +2,7 @@
 
 #include "StateTest.h"
 #include "ShaderTest.h"
+#include "TextureTest.h"
 
 int main(int argc, char** argv)
 {
@@ -9,11 +10,13 @@ int main(int argc, char** argv)
 	if (!game->Init("Dungeon Crawler", 800, 600, WINDOWED))
 		return 1;
 
-	//TestState* first = new TestState(game, "This is the first state");
-	ShaderTest* shaderTest = new ShaderTest(game);
-	shaderTest->Init();
+	State* state;
+	//state = new TestState(game, "This is the first state");
+	//state = new ShaderTest(game);
+	state = new TextureTest(game);
 
-	game->PushState(shaderTest);
+	state->Init();
+	game->PushState(state);
 
 	game->Run();
 	game->Shutdown();

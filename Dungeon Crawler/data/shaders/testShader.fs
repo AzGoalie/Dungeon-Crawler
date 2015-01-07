@@ -1,4 +1,4 @@
-#version 150
+#version 330
 uniform vec3 triangleColor;
 out vec4 outColor;
 void main()
