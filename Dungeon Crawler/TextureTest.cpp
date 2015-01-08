@@ -1,9 +1,7 @@
 #include "TextureTest.h"
 
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
 
-TextureTest::TextureTest(Game* game) : State(game), vao(0), tex(0) 
+TextureTest::TextureTest(Game* game) : State(game), vao(0)
 {}
 
 TextureTest::~TextureTest()
@@ -51,23 +49,8 @@ bool TextureTest::Init()
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
 
 	// Create the texture
-	int w, h, comp;
-	unsigned char* data;
-	glGenTextures(1, &tex);
-	FILE* image = fopen("data/PlanetCutePNG/Brown Block.png", "rb");
-	if (!image)
-		return false;
-	data = stbi_load_from_file(image, &w, &h, &comp, 0);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-	fclose(image);
-	stbi_image_free(data);
-
-	// Texture Filters
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
+    texture.Load("data/PlanetCutePNG/Brown Block.png");
+    
 	// Create the shader
 	shader.CompileShader("data/shaders/testTexture.vs");
 	shader.CompileShader("data/shaders/testTexture.fs");
@@ -87,7 +70,7 @@ bool TextureTest::Init()
 void TextureTest::Shutdown()
 {
 	glDeleteVertexArrays(1, &vao);
-	glDeleteTextures(1, &tex);
+    texture.Destory();
 }
 
 void TextureTest::HandleEvents(SDL_Event &e)
@@ -99,9 +82,10 @@ void TextureTest::Update(double dt)
 void TextureTest::Render(double alpha)
 {
 	shader.Use();
-
+    texture.Use();
 	glBindVertexArray(vao);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
+    
+    texture.UnUse();
 	shader.UnUse();
 }

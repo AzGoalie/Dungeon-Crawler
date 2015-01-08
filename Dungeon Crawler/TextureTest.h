@@ -3,13 +3,14 @@
 
 #include "State.h"
 #include "Shader.h"
+#include "Texture.h"
 
 class TextureTest : public State 
 {
 private:
 	ShaderProgram shader;
+    Texture texture;
 	GLuint vao;
-	GLuint tex;
 
 public:
 	TextureTest(Game* game);
