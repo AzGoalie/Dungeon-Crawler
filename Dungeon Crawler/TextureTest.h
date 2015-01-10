@@ -11,6 +11,7 @@ private:
 	ShaderProgram shader;
     Texture texture;
 	GLuint vao;
+	glm::mat4 ortho;
 
 public:
 	TextureTest(Game* game);

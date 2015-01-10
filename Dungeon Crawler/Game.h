@@ -19,6 +19,10 @@ private:
 	
 	StateManager m_StateManager;
 
+	// Screen size
+	int m_Width;
+	int m_Height;
+
 	// Fixed timestep variables
 	Timer m_Timer;
 	double m_Delta;		// Time in seconds for each update (tick)
@@ -46,6 +50,9 @@ public:
 	double GetTimeInSec();
 	double GetDelta();
 	void SetDelta(double dt);
+
+	int GetWidth() { return m_Width; }
+	int GetHeight() { return m_Height; }
 };
 
 #endif

@@ -1,6 +1,5 @@
 #include "TextureTest.h"
 
-
 TextureTest::TextureTest(Game* game) : State(game), vao(0)
 {}
 
@@ -11,16 +10,19 @@ bool TextureTest::Init()
 {
 	GLfloat square[] = {
 //		 x		y	 z		t	s
-		-0.5f, 0.5f, 0.0f, 0.0, 0.0,
-		0.5f, 0.5f, 0.0f, 1.0, 0.0,
-		0.5f, -0.5f, 0.0f, 1.0, 1.0,
-		-0.5f, -0.5f, 0.0f, 0.0, 1.0
+		0.0f, 0.0f, 0.0f, 0.0, 0.0,
+		100.0f, 0.0f, 0.0f, 1.0, 0.0,
+		100.0f, 100.0f, 0.0f, 1.0, 1.0,
+		0.0f, 100.0f, 0.0f, 0.0, 1.0
 	};
 
 	GLuint ele[] = {
 		0, 1, 2,
 		2, 3, 0
 	};
+
+	// Generate the ortho projection
+	ortho = glm::ortho(0.0, (double)m_pGame->GetWidth(), (double)m_pGame->GetHeight(), 0.0);
 
 	// Generate the VBO
 	GLuint vbo;
@@ -58,6 +60,7 @@ bool TextureTest::Init()
 
 	shader.Use();
 	shader.SetUniform("triangleColor", 1.0, 0.0, 0.0);
+	shader.SetUniform("ortho", ortho);
 
 	// Enable blending for transparency
 	glEnable(GL_BLEND);

@@ -11,6 +11,8 @@ Game::Game()
 	m_Context = nullptr;
 	m_Delta = DEFAULT_DETLA;
 	m_GameTime = 0.0;
+	m_Width = 0;
+	m_Height = 0;
 }
 
 Game::~Game()
@@ -44,6 +46,8 @@ bool Game::Init(const char* title, int width, int height, WindowType type)
 		height = dm.h;
 	}
 
+	m_Width = width;
+	m_Height = height;
 	m_pWindow = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, flags);
 	if (!m_pWindow)
 	{
