@@ -2,6 +2,7 @@
 #define TEXTURE_H
 
 #include "GLHeaders.h"
+#include <string>
 
 class Texture
 {
@@ -31,7 +32,7 @@ public:
     int GetHandle() { return m_Handle; }
     bool IsLoaded() { return m_Loaded; }
     
-	bool Load(const char* filename);
+    bool Load(std::string filename);
 	void Destory();
 
 	void Use();

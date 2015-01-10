@@ -4,6 +4,8 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
+using std::string;
+
 Texture::Texture()
 {
 	m_Handle = 0;
@@ -43,15 +45,17 @@ void Texture::SetFilter(GLuint filter)
     }
 }
 
-bool Texture::Load(const char* filename)
+bool Texture::Load(const string filename)
 {
 	if (m_Loaded)
 		Destory();
     
     glGenTextures(1, &m_Handle);
-    FILE* image = fopen(filename, "rb");
-    if (!image)
+    FILE* image = fopen(filename.c_str(), "rb");
+    if (!image) {
+        std::cout << "Couldn't load texture: " << filename << std::endl;
         return false;
+    }
     unsigned char* data = stbi_load_from_file(image, &m_Width, &m_Height, &m_Comp, 0);
     
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_Width, m_Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);

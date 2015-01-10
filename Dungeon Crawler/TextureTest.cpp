@@ -51,11 +51,11 @@ bool TextureTest::Init()
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
 
 	// Create the texture
-    texture.Load("data/PlanetCutePNG/Brown Block.png");
+    texture.Load(m_pGame->GetFullPath("data/PlanetCutePNG/Brown Block.png"));
     
 	// Create the shader
-	shader.CompileShader("data/shaders/testTexture.vs");
-	shader.CompileShader("data/shaders/testTexture.fs");
+	shader.CompileShader(m_pGame->GetFullPath("data/shaders/testTexture.vs"));
+	shader.CompileShader(m_pGame->GetFullPath("data/shaders/testTexture.fs"));
 	shader.Link();
 
 	shader.Use();

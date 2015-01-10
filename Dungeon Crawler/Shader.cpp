@@ -74,9 +74,9 @@ bool ShaderProgram::FileExists(const char* filename)
 	return ret == 0;
 }
 
-bool ShaderProgram::CompileShader(const char* filename)
+bool ShaderProgram::CompileShader(const string filename)
 {
-	if (!FileExists(filename))
+	if (!FileExists(filename.c_str()))
 	{
 		cout << "Shader '" << filename << "' does not exist" << endl;
 		return false;
@@ -84,7 +84,7 @@ bool ShaderProgram::CompileShader(const char* filename)
 
 	int numExt = sizeof(ShaderInfo::extensions) / sizeof(ShaderInfo::shader_file_extension);
 
-	string ext = GetExt(filename);
+	string ext = GetExt(filename.c_str());
 	Shader::ShaderType type = Shader::VERTEX;
 	bool matchFound = false;
 	for (int i = 0; i < numExt; i++)
@@ -117,7 +117,7 @@ bool ShaderProgram::CompileShader(const char* filename)
 	return CompileShader(shader.str().c_str(), type);
 }
 
-bool ShaderProgram::CompileShader(const char* source, Shader::ShaderType type)
+bool ShaderProgram::CompileShader(const string source, Shader::ShaderType type)
 {
 	if (m_Handle <= 0)
 	{
@@ -130,7 +130,8 @@ bool ShaderProgram::CompileShader(const char* source, Shader::ShaderType type)
 	}
 
 	GLuint shaderHandle = glCreateShader(type);
-	glShaderSource(shaderHandle, 1, &source, NULL);
+    const char* src = source.c_str();
+	glShaderSource(shaderHandle, 1, &src, NULL);
 	glCompileShader(shaderHandle);
 
 	GLint result;

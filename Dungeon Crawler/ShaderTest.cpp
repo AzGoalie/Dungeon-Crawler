@@ -60,8 +60,8 @@ bool ShaderTest::Init()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 
-	shader.CompileShader("data/shaders/testShader.vs");
-	shader.CompileShader("data/shaders/testShader.fs");
+	shader.CompileShader(m_pGame->GetFullPath("data/shaders/testShader.vs").c_str());
+	shader.CompileShader(m_pGame->GetFullPath("data/shaders/testShader.fs").c_str());
 	shader.Link();
 
 	shader.Use();

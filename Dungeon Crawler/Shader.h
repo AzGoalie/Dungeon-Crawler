@@ -34,8 +34,8 @@ public:
 	ShaderProgram();
 	~ShaderProgram();
 
-	bool CompileShader(const char* filename);
-	bool CompileShader(const char* source, Shader::ShaderType type);
+    bool CompileShader(const std::string filename);
+    bool CompileShader(const std::string, Shader::ShaderType type);
 
 	bool Link();
 	void Use();

@@ -5,6 +5,8 @@
 #include "Timer.h"
 #include "StateManager.h"
 
+#include <string>
+
 enum WindowType {
 	WINDOWED,
 	FULLSCREEN,
@@ -23,6 +25,9 @@ private:
 	int m_Width;
 	int m_Height;
 
+    // Add this before loading any file, used to get files for mac
+    char* m_pBasePath;
+    
 	// Fixed timestep variables
 	Timer m_Timer;
 	double m_Delta;		// Time in seconds for each update (tick)
@@ -53,6 +58,9 @@ public:
 
 	int GetWidth() { return m_Width; }
 	int GetHeight() { return m_Height; }
+    
+    const char* GetBasePath() { return m_pBasePath; }
+    const std::string GetFullPath(char* filename);
 };
 
 #endif

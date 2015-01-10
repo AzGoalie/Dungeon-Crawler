@@ -13,6 +13,7 @@ Game::Game()
 	m_GameTime = 0.0;
 	m_Width = 0;
 	m_Height = 0;
+    m_pBasePath = nullptr;
 }
 
 Game::~Game()
@@ -30,6 +31,9 @@ bool Game::Init(const char* title, int width, int height, WindowType type)
 	}
 	SDL_Log("SDL initialized");
 
+    // Load the base path
+    m_pBasePath = SDL_GetBasePath();
+    
 	// Create our window
 	int flags = SDL_WINDOW_OPENGL;
 	if (type == FULLSCREEN)
@@ -219,4 +223,11 @@ void Game::PushState(State* state, bool overlay)
 void Game::PopState()
 {
 	m_StateManager.Pop();
+}
+
+const std::string Game::GetFullPath(char *filename)
+{
+    std::string path = GetBasePath();
+    path.append(filename);
+    return path;
 }
