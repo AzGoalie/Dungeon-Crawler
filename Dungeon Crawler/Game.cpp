@@ -225,7 +225,7 @@ void Game::PopState()
 	m_StateManager.Pop();
 }
 
-const std::string Game::GetFullPath(char *filename)
+const std::string Game::GetFullPath(const char *filename)
 {
     std::string path = GetBasePath();
     path.append(filename);

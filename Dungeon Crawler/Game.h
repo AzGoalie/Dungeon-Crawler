@@ -60,7 +60,7 @@ public:
 	int GetHeight() { return m_Height; }
     
     const char* GetBasePath() { return m_pBasePath; }
-    const std::string GetFullPath(char* filename);
+    const std::string GetFullPath(const char* filename);
 };
 
 #endif
