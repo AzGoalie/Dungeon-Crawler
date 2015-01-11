@@ -93,7 +93,7 @@ bool Game::Init(const char* title, int width, int height, WindowType type)
 	SDL_Log("GLEW Initialized");
 
 	//TODO: this icon is only for testing
-#ifdef _DEBUG
+#if defined(_DEBUG) || defined(DEBUG)
 	SDL_Surface *icon = SDL_LoadBMP("data/icons/dev_icon.bmp");
 	if (!icon)
 	{
