@@ -18,6 +18,7 @@ private:
 	bool m_Loaded;
 public:
 	Texture();
+    Texture(std::string filename);
 	~Texture();
 
     void SetWrap(GLuint wrap);

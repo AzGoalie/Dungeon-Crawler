@@ -32,6 +32,9 @@ protected:
 
 public:
 	ShaderProgram();
+    
+    // Will look for all shaders with the file name and add them to the program
+    ShaderProgram(std::string filename);
 	~ShaderProgram();
 
     bool CompileShader(const std::string filename);

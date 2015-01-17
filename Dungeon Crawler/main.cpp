@@ -3,6 +3,7 @@
 #include "StateTest.h"
 #include "ShaderTest.h"
 #include "TextureTest.h"
+#include "ResourceLoaderTest.h"
 
 int main(int argc, char** argv)
 {
@@ -13,8 +14,9 @@ int main(int argc, char** argv)
 	State* state;
 	//state = new TestState(game, "This is the first state");
 	//state = new ShaderTest(game);
-	state = new TextureTest(game);
-
+	//state = new TextureTest(game);
+    state = new ResourceLoaderTest(game);
+    
 	state->Init();
 	game->PushState(state);
 

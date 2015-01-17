@@ -37,6 +37,33 @@ namespace ShaderInfo {
 ShaderProgram::ShaderProgram() : m_Handle(0), m_Linked(false)
 {}
 
+ShaderProgram::ShaderProgram(string filename)
+{
+    m_Handle = 0;
+    m_Linked = false;
+    
+    // Search filepath for any shaders with same name
+    int numExt = sizeof(ShaderInfo::extensions) / sizeof(ShaderInfo::shader_file_extension);
+    bool found = false;
+    for (int i = 0; i < numExt; i++)
+    {
+        string path = filename;
+        path.append(ShaderInfo::extensions[i].ext);
+        
+        if (FileExists(path.c_str()))
+        {
+            found = true;
+            if (!CompileShader(path))
+                cout << "Failed to compile shader: " << path << endl;
+        }
+    }
+    
+    if (found)
+        if (!Link())
+            cout << "failed to link shader: " << filename << endl;
+    
+}
+
 ShaderProgram::~ShaderProgram()
 {
 	if (m_Handle == 0)

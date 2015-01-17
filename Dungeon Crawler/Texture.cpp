@@ -19,6 +19,21 @@ Texture::Texture()
 	m_Loaded = false;
 }
 
+Texture::Texture(string filename)
+{
+    m_Handle = 0;
+    m_Wrap = GL_CLAMP_TO_EDGE;
+    m_Filter = GL_NEAREST;
+    
+    m_Width = 0;
+    m_Height = 0;
+    m_Comp = 0;
+    
+    m_Loaded = false;
+    
+    Load(filename);
+}
+
 Texture::~Texture()
 {
 	if (m_Loaded)
@@ -50,7 +65,10 @@ bool Texture::Load(const string filename)
 	if (m_Loaded)
 		Destory();
     
+    glBindTexture(GL_TEXTURE_2D, 0);
     glGenTextures(1, &m_Handle);
+    glBindTexture(GL_TEXTURE_2D, m_Handle);
+    
     FILE* image = fopen(filename.c_str(), "rb");
     if (!image) {
         std::cout << "Couldn't load texture: " << filename << std::endl;
@@ -71,11 +89,12 @@ bool Texture::Load(const string filename)
     if (m_Filter == GL_LINEAR_MIPMAP_LINEAR || m_Filter == GL_LINEAR_MIPMAP_NEAREST ||
         m_Filter == GL_NEAREST_MIPMAP_NEAREST || m_Filter == GL_NEAREST_MIPMAP_LINEAR)
     {
-        Use();
+        glBindTexture(GL_TEXTURE_2D, m_Handle);
         glGenerateMipmap(GL_TEXTURE_2D);
-        UnUse();
+        glBindTexture(GL_TEXTURE_2D, 0);
     }
     
+    m_Loaded = true;
 	return true;
 }
 
