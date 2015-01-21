@@ -93,9 +93,24 @@ bool Game::Init(const char* title, int width, int height, WindowType type)
 	}
 	SDL_Log("GLEW Initialized");
 
+	// Init State Manager
+	m_StateManager.Init(this);
+    PHYSFS_init(NULL);
+
+    PHYSFS_addToSearchPath(GetBasePath(), 1);
+	PHYSFS_addToSearchPath(GetFullPath("data.zip").c_str(), 1);
+
 	//TODO: this icon is only for testing
 #if defined(_DEBUG) || defined(DEBUG)
-	SDL_Surface *icon = SDL_LoadBMP("data/icons/dev_icon.bmp");
+	PHYSFS_file* file = PHYSFS_openRead("data/icons/dev_icon.bmp");
+	PHYSFS_sint64 size = PHYSFS_fileLength(file);
+	char* src = new char[size];
+	PHYSFS_read(file, src, 1, size);
+	PHYSFS_close(file);
+
+	SDL_RWops* texture = SDL_RWFromMem(src, size);
+	SDL_Surface *icon = SDL_LoadBMP_RW(texture, 1);
+	delete[] src;
 	if (!icon)
 	{
 		SDL_Log("Error loading the window icon");
@@ -104,12 +119,6 @@ bool Game::Init(const char* title, int width, int height, WindowType type)
 	SDL_SetWindowIcon(m_pWindow, icon);
 #endif
 
-	// Init State Manager
-	m_StateManager.Init(this);
-    PHYSFS_init(NULL);
-
-    PHYSFS_addToSearchPath(GetBasePath(), 1);
-    
 	SDL_Log("Initialization done");
 	m_Running = true;
 	return true;
