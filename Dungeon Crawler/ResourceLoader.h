@@ -22,7 +22,6 @@ class ResourceLoader
 {
 private:
     std::unordered_map<std::string, Resource<T> > m_ResourceMap;
-    Game* m_pGame;
     
     ResourceLoader(const ResourceLoader&){}
     ResourceLoader &operator = (const ResourceLoader& ) { return *this; }
@@ -34,7 +33,7 @@ public:
     ResourceLoader();
     ~ResourceLoader();
     
-    bool Init(Game* game, bool cache = true);
+    bool Init(bool cache = true);
     void Shutdown();
     
     T* Load(std::string filename);
@@ -44,7 +43,7 @@ public:
 
 // Implementation because of templates
 template <class T>
-ResourceLoader<T>::ResourceLoader() : m_pGame(nullptr)
+ResourceLoader<T>::ResourceLoader()
 {}
 
 template <class T>
@@ -54,13 +53,8 @@ ResourceLoader<T>::~ResourceLoader()
 }
 
 template <class T>
-bool ResourceLoader<T>::Init(Game* game, bool cache)
+bool ResourceLoader<T>::Init(bool cache)
 {
-    if (m_pGame == nullptr)
-        m_pGame = game;
-    else
-        return false;
-    
     m_Cache = cache;
     
     return true;
@@ -69,8 +63,6 @@ bool ResourceLoader<T>::Init(Game* game, bool cache)
 template <class T>
 void ResourceLoader<T>::Shutdown()
 {
-    if (m_pGame)
-        m_pGame = nullptr;
     if (!m_ResourceMap.empty())
         ReleaseAll();
 }
@@ -91,7 +83,7 @@ T* ResourceLoader<T>::Load(std::string filename)
     Resource<T> resource;
     resource.references = 1;
     resource.filename = filename;
-    resource.resource = new T(m_pGame->GetFullPath(filename.c_str()));
+    resource.resource = new T(filename.c_str());
     m_ResourceMap.insert(std::pair<std::string, Resource<T> > (filename, resource));
     
     return resource.resource;

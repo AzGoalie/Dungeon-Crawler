@@ -1,5 +1,6 @@
 #include "Texture.h"
 #include <iostream>
+#include <physfs.h>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
@@ -65,20 +66,33 @@ bool Texture::Load(const string filename)
 	if (m_Loaded)
 		Destory();
     
+    if (PHYSFS_exists(filename.c_str()) == 0)
+    {
+        std::cout << "Couldn't find texture: " << filename << std::endl;
+        return false;
+    }
+    
     glBindTexture(GL_TEXTURE_2D, 0);
     glGenTextures(1, &m_Handle);
     glBindTexture(GL_TEXTURE_2D, m_Handle);
     
-    FILE* image = fopen(filename.c_str(), "rb");
-    if (!image) {
+    PHYSFS_file* file = PHYSFS_openRead(filename.c_str());
+    PHYSFS_sint64 size = PHYSFS_fileLength(file);
+    
+    unsigned char* image = new unsigned char[size];
+    int read = PHYSFS_read(file, image, 1, size);
+    PHYSFS_close(file);
+    
+    if (!image || read != size) {
         std::cout << "Couldn't load texture: " << filename << std::endl;
         return false;
     }
-    unsigned char* data = stbi_load_from_file(image, &m_Width, &m_Height, &m_Comp, 0);
+    
+    unsigned char* data = stbi_load_from_memory(image, size, &m_Width, &m_Height, &m_Comp, 0);
     
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_Width, m_Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
     
-    fclose(image);
+    delete [] image;
     stbi_image_free(data);
     
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, m_Wrap);

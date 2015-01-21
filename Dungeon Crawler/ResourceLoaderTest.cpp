@@ -8,8 +8,8 @@ ResourceLoaderTest::~ResourceLoaderTest()
 
 bool ResourceLoaderTest::Init()
 {
-    textureLoader.Init(m_pGame);
-    shaderLoader.Init(m_pGame);
+    textureLoader.Init();
+    shaderLoader.Init();
 
     GLfloat square[] = {
         //		 x		y	 z		t	s

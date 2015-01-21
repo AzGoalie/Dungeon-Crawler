@@ -1,9 +1,10 @@
 #include "Shader.h"
 
 #include <iostream>
-#include <fstream>
 #include <sstream>
-#include <sys/stat.h>
+
+#include <physfs.h>
+
 using std::cout;
 using std::endl;
 using std::string;
@@ -94,11 +95,10 @@ string ShaderProgram::GetExt(const char* filename)
 
 bool ShaderProgram::FileExists(const char* filename)
 {
-	struct stat info;
-	int ret = -1;
-
-	ret = stat(filename, &info);
-	return ret == 0;
+	if (PHYSFS_exists(filename) == 0)
+        return false;
+    else
+        return true;
 }
 
 bool ShaderProgram::CompileShader(const string filename)
@@ -130,18 +130,24 @@ bool ShaderProgram::CompileShader(const string filename)
 		return false;
 	}
 
-	ifstream inFile(filename);
-	if (!inFile)
+    PHYSFS_file* file = PHYSFS_openRead(filename.c_str());
+    PHYSFS_sint64 size = PHYSFS_fileLength(file);
+    
+    char* src = new char[size+1];
+    int read = PHYSFS_read(file, src, 1, size);
+    src[size] = '\0';
+    PHYSFS_close(file);
+
+	if (!src || read != size)
 	{
 		cout << "Unable to open: " << filename << endl;
 		return false;
 	}
-
-	stringstream shader;
-	shader << inFile.rdbuf();
-	inFile.close();
-
-	return CompileShader(shader.str().c_str(), type);
+    
+	bool result = CompileShader(src, type);
+    delete [] src;
+    
+    return result;
 }
 
 bool ShaderProgram::CompileShader(const string source, Shader::ShaderType type)
@@ -177,7 +183,7 @@ bool ShaderProgram::CompileShader(const string source, Shader::ShaderType type)
 			delete[] str;
 		}
 
-		cout << "Shader compilation failed\n " << log << endl;
+		cout << "Shader compilation failed for " << source << endl << log << endl;
 		return false;
 	}
 

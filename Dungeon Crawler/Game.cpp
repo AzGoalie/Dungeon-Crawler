@@ -2,6 +2,7 @@
 #include "Timer.h"
 
 #include <iostream>
+#include <physfs.h>
 
 Game::Game()
 {
@@ -105,7 +106,10 @@ bool Game::Init(const char* title, int width, int height, WindowType type)
 
 	// Init State Manager
 	m_StateManager.Init(this);
+    PHYSFS_init(NULL);
 
+    PHYSFS_addToSearchPath(GetBasePath(), 1);
+    
 	SDL_Log("Initialization done");
 	m_Running = true;
 	return true;
@@ -151,7 +155,8 @@ void Game::Shutdown()
 	SDL_Log("Shutting down...");
 
 	m_StateManager.Shutdown();
-
+    PHYSFS_deinit();
+    
 	SDL_GL_DeleteContext(m_Context);
 	SDL_DestroyWindow(m_pWindow);
 	SDL_Quit();
