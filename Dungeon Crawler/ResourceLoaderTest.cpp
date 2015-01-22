@@ -53,9 +53,11 @@ bool ResourceLoaderTest::Init()
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
     
+    // Load the resources
     texture = textureLoader.Load("data/PlanetCutePNG/Brown Block.png");
     shader = shaderLoader.Load("data/shaders/testTexture");
     
+    // Setup the shader
     shader->Use();
     shader->SetUniform("triangleColor", 1.0, 0.0, 0.0);
     shader->SetUniform("ortho", ortho);
@@ -86,6 +88,7 @@ void ResourceLoaderTest::Render(double alpha)
 {
     shader->Use();
     texture->Use();
+    
     glBindVertexArray(vao);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     

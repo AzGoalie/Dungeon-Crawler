@@ -3,6 +3,10 @@
 
 #include "State.h"
 
+// Simple test for changing states
+
+// hiting any key will print the current state
+// clicking the mouse will change the state
 class TestState : public State
 {
 private:

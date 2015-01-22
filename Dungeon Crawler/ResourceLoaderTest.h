@@ -7,6 +7,7 @@
 #include "Shader.h"
 #include "ResourceLoader.h"
 
+// Same test as TextureTest but uses the ResourceLoader
 class ResourceLoaderTest : public State
 {
 private:

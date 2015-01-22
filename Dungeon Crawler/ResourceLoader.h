@@ -17,6 +17,9 @@ struct Resource
 
 // Used to load any resource (Texture, Shaders, Files)
 // 'm_Cache' sets if you want to use a cache or not
+
+// TODO: Should probably make all resources inherit from a base resource class
+// and call load instead of constructors
 template <class T>
 class ResourceLoader
 {

@@ -5,6 +5,7 @@
 #include "Shader.h"
 #include "Texture.h"
 
+// Simple test to load a texture and display it on the screen
 class TextureTest : public State 
 {
 private:

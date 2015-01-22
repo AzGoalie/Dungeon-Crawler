@@ -1,8 +1,6 @@
 #include "Shader.h"
 
 #include <iostream>
-#include <sstream>
-
 #include <physfs.h>
 
 using std::cout;
@@ -62,6 +60,8 @@ ShaderProgram::ShaderProgram(string filename)
     if (found)
         if (!Link())
             cout << "failed to link shader: " << filename << endl;
+    else
+        cout << "failed to load shader: " << filename << endl;
     
 }
 
@@ -140,7 +140,7 @@ bool ShaderProgram::CompileShader(const string filename)
 
 	if (!src || read != size)
 	{
-		cout << "Unable to open: " << filename << endl;
+		cout << "Unable to read: " << filename << endl;
 		return false;
 	}
     

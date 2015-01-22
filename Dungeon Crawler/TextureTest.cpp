@@ -86,6 +86,7 @@ void TextureTest::Render(double alpha)
 {
 	shader.Use();
     texture.Use();
+    
 	glBindVertexArray(vao);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     

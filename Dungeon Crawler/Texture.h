@@ -7,13 +7,14 @@
 class Texture
 {
 private:
-	GLuint m_Handle;
-	GLint m_Wrap;
-	GLint m_Filter;
+	GLuint m_Handle;    // GL Texture ID
+	GLint m_Wrap;       // Wrapping filter, should make seperate for s/t
+	GLint m_Filter;     // Texture filter, should make seprate for min/max
 
-	int m_Width;
+    // Texture info
+    int m_Width;
 	int m_Height;
-    int m_Comp;
+    int m_Comp;     // bbp
 
 	bool m_Loaded;
 public:

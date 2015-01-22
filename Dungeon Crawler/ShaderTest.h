@@ -4,6 +4,8 @@
 #include "State.h"
 #include "Shader.h"
 
+// Simple test for shaders
+// Should have a alternating red/black triangle and a pink square
 class ShaderTest : public State
 {
 private:

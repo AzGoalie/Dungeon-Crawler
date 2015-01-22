@@ -4,6 +4,9 @@
 #include "Game.h"
 #include "GLHeaders.h"
 
+// Abstract class
+// All states must inherit from this class and implement these methods
+// A state can be added to the game through m_pGame->PushState()
 class State
 {
 protected:
