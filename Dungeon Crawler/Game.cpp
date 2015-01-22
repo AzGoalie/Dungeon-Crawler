@@ -14,7 +14,7 @@ Game::Game()
 	m_GameTime = 0.0;
 	m_Width = 0;
 	m_Height = 0;
-    m_pBasePath = nullptr;
+	m_pBasePath = nullptr;
 }
 
 Game::~Game()
@@ -32,14 +32,14 @@ bool Game::Init(const char* title, int width, int height, WindowType type)
 	}
 	SDL_Log("SDL initialized");
 
-    // Load the base path
-    m_pBasePath = SDL_GetBasePath();
-    
+	// Load the base path
+	m_pBasePath = SDL_GetBasePath();
+
 	// Create our window
 	int flags = SDL_WINDOW_OPENGL;
 	if (type == FULLSCREEN)
 		flags |= SDL_WINDOW_FULLSCREEN;
-	if (type == BORDERLESS) 
+	if (type == BORDERLESS)
 	{
 		flags |= SDL_WINDOW_BORDERLESS;
 		SDL_DisplayMode dm;
@@ -95,28 +95,13 @@ bool Game::Init(const char* title, int width, int height, WindowType type)
 
 	// Init State Manager
 	m_StateManager.Init(this);
-    PHYSFS_init(NULL);
+	PHYSFS_init(NULL);
 
-    PHYSFS_addToSearchPath(GetBasePath(), 1);
+	PHYSFS_addToSearchPath(GetBasePath(), 1);
 	PHYSFS_addToSearchPath(GetFullPath("data.zip").c_str(), 1);
 
-	//TODO: this icon is only for testing
 #if defined(_DEBUG) || defined(DEBUG)
-	PHYSFS_file* file = PHYSFS_openRead("data/icons/dev_icon.bmp");
-	PHYSFS_sint64 size = PHYSFS_fileLength(file);
-	char* src = new char[size];
-	PHYSFS_read(file, src, 1, size);
-	PHYSFS_close(file);
-
-	SDL_RWops* texture = SDL_RWFromMem(src, size);
-	SDL_Surface *icon = SDL_LoadBMP_RW(texture, 1);
-	delete[] src;
-	if (!icon)
-	{
-		SDL_Log("Error loading the window icon");
-		return false;
-	}
-	SDL_SetWindowIcon(m_pWindow, icon);
+	SetIcon("data/icons/dev_icon.bmp");
 #endif
 
 	SDL_Log("Initialization done");
@@ -164,8 +149,8 @@ void Game::Shutdown()
 	SDL_Log("Shutting down...");
 
 	m_StateManager.Shutdown();
-    PHYSFS_deinit();
-    
+	PHYSFS_deinit();
+
 	SDL_GL_DeleteContext(m_Context);
 	SDL_DestroyWindow(m_pWindow);
 	SDL_Quit();
@@ -241,7 +226,38 @@ void Game::PopState()
 
 const std::string Game::GetFullPath(const char *filename)
 {
-    std::string path = GetBasePath();
-    path.append(filename);
-    return path;
+	std::string path = GetBasePath();
+	path.append(filename);
+	return path;
+}
+
+void Game::SetIcon(const char* filename)
+{
+	if (PHYSFS_exists(filename) == 0)
+	{
+		SDL_Log("Error loading the window icon: %s", filename);
+		return;
+	}
+
+	PHYSFS_file* file = PHYSFS_openRead(filename);
+	PHYSFS_sint64 size = PHYSFS_fileLength(file);
+	char* src = new char[size];
+	PHYSFS_read(file, src, 1, size);
+	PHYSFS_close(file);
+
+	SDL_RWops* texture = SDL_RWFromMem(src, size);
+	SDL_Surface *icon = SDL_LoadBMP_RW(texture, 1);
+	delete[] src;
+	if (!icon)
+	{
+		SDL_Log("Error loading the window icon");
+		return;
+	}
+	SDL_SetWindowIcon(m_pWindow, icon);
+	SDL_FreeSurface(icon);
+}
+
+void Game::SetTitle(const char* title)
+{
+	SDL_SetWindowTitle(m_pWindow, title);
 }

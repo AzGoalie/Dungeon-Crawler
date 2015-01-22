@@ -61,6 +61,9 @@ public:
     
     const char* GetBasePath() { return m_pBasePath; }
     const std::string GetFullPath(const char* filename);
+
+	void SetIcon(const char* filename);
+	void SetTitle(const char* title);
 };
 
 #endif
