@@ -57,9 +57,11 @@ ShaderProgram::ShaderProgram(string filename)
         }
     }
     
-    if (found)
-        if (!Link())
-            cout << "failed to link shader: " << filename << endl;
+	if (found)
+	{
+		if (!Link())
+			cout << "failed to link shader: " << filename << endl;
+	}
     else
         cout << "failed to load shader: " << filename << endl;
     
