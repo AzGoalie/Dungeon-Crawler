@@ -97,6 +97,7 @@
     <ClCompile Include="StateManager.cpp" />
     <ClCompile Include="StateTest.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="TextureRegion.cpp" />
     <ClCompile Include="TextureTest.cpp" />
     <ClCompile Include="Timer.cpp" />
   </ItemGroup>
@@ -112,6 +113,7 @@
     <ClInclude Include="StateTest.h" />
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="TextureRegion.h" />
     <ClInclude Include="TextureTest.h" />
     <ClInclude Include="Timer.h" />
   </ItemGroup>
