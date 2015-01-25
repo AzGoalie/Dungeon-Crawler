@@ -90,7 +90,26 @@ bool Texture::Load(const string filename)
     
     unsigned char* data = stbi_load_from_memory(image, size, &m_Width, &m_Height, &m_Comp, 0);
     
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_Width, m_Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+	GLenum format;
+	switch (m_Comp)
+	{
+	case 1:
+		format = GL_LUMINANCE;
+		break;
+	case 2:
+		format = GL_LUMINANCE_ALPHA;
+		break;
+	case 3:
+		format = GL_RGB;
+		break;
+	case 4:
+		format = GL_RGBA;
+		break;
+	default:
+		std::cout << "Unknown bpp for texture " << filename << std::endl;
+	}
+
+	glTexImage2D(GL_TEXTURE_2D, 0, format, m_Width, m_Height, 0, format, GL_UNSIGNED_BYTE, data);
     
     delete [] image;
     stbi_image_free(data);
