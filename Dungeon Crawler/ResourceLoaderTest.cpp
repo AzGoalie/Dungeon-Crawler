@@ -74,8 +74,8 @@ bool ResourceLoaderTest::Init()
 void ResourceLoaderTest::Shutdown()
 {
     glDeleteVertexArrays(1, &vao);
-    textureLoader.Unload("data/PlanetCutePNG/Brown Block.png");
-    shaderLoader.Unload("data/shaders/testTexture");
+    textureLoader.Shutdown();
+    shaderLoader.Shutdown();
 }
 
 void ResourceLoaderTest::HandleEvents(SDL_Event &e)
