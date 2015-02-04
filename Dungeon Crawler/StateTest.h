@@ -10,10 +10,10 @@
 class TestState : public State
 {
 private:
-	char* str;
+	const char* str;
 
 public:
-	TestState(Game* game, char* str);
+	TestState(Game* game, const char* str);
 	~TestState();
 
 	bool Init();

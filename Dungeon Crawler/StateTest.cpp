@@ -2,7 +2,7 @@
 #include "GLHeaders.h"
 #include "iostream"
 
-TestState::TestState(Game* game, char* str) : State(game), str(str)
+TestState::TestState(Game* game, const char* str) : State(game), str(str)
 {
 }
 
